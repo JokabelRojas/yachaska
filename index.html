@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>YACHASKA – What the Moon Saw</title>
+  <meta name="description" content="Cuento web interactivo: los objetos que la NASA dejó en la Luna, Marte y el espacio profundo cuentan su historia en primera persona, en las lenguas del Perú. NASA Space Apps 2026 · Ayacucho.">
+  <meta name="theme-color" content="#0b1838">
+  <meta property="og:title" content="YACHASKA – Lo que la Luna vio / What the Moon Saw">
+  <meta property="og:description" content="NASA's abandoned hardware tells its own story — in Quechua, Spanish and English. Made in Ayacucho, Peru.">
+  <meta property="og:image" content="assets/logo-noche.webp">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230b1838'/%3E%3Ccircle cx='28' cy='32' r='16' fill='%23F3EEE4'/%3E%3Ccircle cx='36' cy='28' r='15' fill='%230b1838'/%3E%3Ccircle cx='46' cy='38' r='7' fill='%23E27B58'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=10">
+  <script>
+    /* tema antes de pintar, para evitar parpadeo */
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("yachaska-theme"); } catch (e) {}
+      if (t !== "day") t = "night"; /* por defecto: modo oscuro */
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#story" data-ui="skip">Saltar al cuento</a>
+
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="YACHASKA">
+      <svg viewBox="-3.4 -3.4 6.8 6.8" aria-hidden="true"><polygon points="-1,-3 1,-3 1,-2 2,-2 2,-1 3,-1 3,1 2,1 2,2 1,2 1,3 -1,3 -1,2 -2,2 -2,1 -3,1 -3,-1 -2,-1 -2,-2 -1,-2" fill="#F2B632" stroke="#1d1530" stroke-width=".3"/><circle r=".8" fill="#0b1838"/></svg>
+      <span>YACHASKA</span>
+    </a>
+    <nav class="progress" id="progress" aria-label="Capítulos"></nav>
+    <div class="tools">
+      <button class="mute-btn" id="autoplay" type="button" aria-pressed="true">
+        <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"></svg>
+        <span id="muteLbl">Sound on</span>
+      </button>
+      <button class="icon-btn" id="theme" type="button" data-ui-label="menuTheme" title="Noche / día">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+      </button>
+      <button class="lang-btn" id="langBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>
+        <span id="langName">Castellano</span>
+      </button>
+      <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn"></div>
+    </div>
+  </header>
+
+  <div class="notice" id="notice" role="status" aria-live="polite">
+    <p id="noticeText"></p>
+    <button class="btn btn--ghost btn--sm" id="noticeClose" type="button" aria-label="Cerrar">✕</button>
+  </div>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero__inner">
+        <div class="hero__logo">
+          <img class="logo-night" src="assets/logo-noche.webp" alt="YACHASKA" width="1536" height="1024" fetchpriority="high">
+          <img class="logo-day" src="assets/logo-dia.webp" alt="" width="1536" height="1024" loading="lazy">
+        </div>
+        <svg class="hero__art" id="heroArt" viewBox="0 0 1200 620" role="img" xmlns="http://www.w3.org/2000/svg"></svg>
+        <p class="kicker" data-ui="kicker">Un cuento para escuchar con el scroll</p>
+        <h1 id="heroTitle" data-ui="title">Lo que la Luna vio</h1>
+        <p class="lede" data-ui="lede"></p>
+        <p class="meta" data-ui="meta"></p>
+        <div class="hero__actions">
+          <a class="btn btn--gold" href="#story" id="startBtn"><span data-ui="start">Empezar el cuento</span> <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="chips" id="heroChips" role="group" aria-label="Lengua"></div>
+      </div>
+    </section>
+
+    <section class="cast-wrap" aria-labelledby="castTitle">
+      <h2 class="section-title" id="castTitle" data-ui="cast">The real protagonists</h2>
+      <p class="section-lede" data-ui="castLede"></p>
+      <div class="cast" id="cast"></div>
+    </section>
+
+    <div class="awayu" aria-hidden="true"></div>
+
+    <section class="contents" aria-labelledby="tocTitle">
+      <h2 class="section-title" id="tocTitle" data-ui="index">Índice del cuento</h2>
+      <ol class="toc" id="toc"></ol>
+    </section>
+
+    <div id="story"></div>
+
+    <div class="awayu" aria-hidden="true"></div>
+
+    <div class="extras" id="extras">
+      <section class="finale">
+        <blockquote id="finaleQuote"></blockquote>
+        <a class="btn btn--ghost" href="#top" data-ui="top">Volver al inicio</a>
+      </section>
+
+      <section aria-labelledby="tlTitle">
+        <h2 class="section-title" id="tlTitle" data-ui="timeline">Timeline</h2>
+        <p class="section-lede" data-ui="timelineLede"></p>
+        <ol class="timeline" id="timeline"></ol>
+      </section>
+
+      <section aria-labelledby="objTitle">
+        <h2 class="section-title" id="objTitle" data-ui="objects">Los que se quedaron</h2>
+        <p class="section-lede" data-ui="objectsLede"></p>
+        <div class="objects" id="objects"></div>
+      </section>
+
+      <section aria-labelledby="langsTitle">
+        <h2 class="section-title" id="langsTitle" data-ui="langsTitle">Las lenguas de YACHASKA</h2>
+        <p class="section-lede" data-ui="langsLede"></p>
+        <div class="table-wrap"><table id="langsTable"></table></div>
+      </section>
+
+      <section aria-labelledby="srcTitle">
+        <h2 class="section-title" id="srcTitle" data-ui="sources">Fuentes y datos NASA</h2>
+        <ul class="sources" id="sources"></ul>
+      </section>
+
+      <section class="about" aria-labelledby="aboutTitle">
+        <div>
+          <h3 id="aboutTitle" data-ui="about">Sobre YACHASKA</h3>
+          <p data-ui="aboutText"></p>
+          <button class="btn btn--sm" id="csvBtn" type="button" data-ui="csv">Descargar guion</button>
+        </div>
+        <div>
+          <h3>AI</h3>
+          <p data-ui="ai"></p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <p><strong>YACHASKA</strong> · Ayacucho, Perú · NASA Space Apps Challenge 2026</p>
+    <p>Abandoned but not Forgotten</p>
+  </footer>
+
+  <button class="stop-bar" id="stopBar" type="button" hidden><span class="stop-bar__dot" aria-hidden="true"></span><span aria-hidden="true">■</span> <span id="stopBarLbl">Stop audio</span></button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/story.js?v=10"></script>
+  <script src="js/story-qu.js?v=10"></script>
+  <script src="js/story-ay.js?v=10"></script>
+  <script src="js/story-cni.js?v=10"></script>
+  <script src="js/story-shp.js?v=10"></script>
+  <script src="js/story-agr.js?v=10"></script>
+  <script src="js/scenes.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
+</body>
+</html>
