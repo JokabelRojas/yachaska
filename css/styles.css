@@ -7,10 +7,10 @@
    ========================================================================= */
 
 :root {
-  --bg: #0b1838;
-  --bg-2: #070f26;
-  --surface: #13224a;
-  --panel: #1a2b5b;
+  --bg: #0d1a4a;
+  --bg-2: #081033;
+  --surface: #16276a;
+  --panel: #1d3180;
   --plum: #4d4177;
   --sky: #3a60a0;
   --peri: #88a5e0;
@@ -39,7 +39,7 @@
 }
 
 :root[data-theme="day"] {
-  --bg: #F1ECE2;
+  --bg: #FBF6EA;
   --bg-2: #E7E0D2;
   --surface: #FBF8F2;
   --panel: #ECE7F5;
@@ -319,6 +319,9 @@ a { color: var(--peri); text-underline-offset: 3px; }
   .brand span { display: none; }
 }
 
+/* cámara: zoom suave hacia lo que aparece en cada paso */
+.scene .cam { transform-origin: 0 0; transition: transform 1.4s cubic-bezier(.4, 0, .2, 1); }
+
 /* capas del dibujo */
 .scene .ly { opacity: 0; transform: translateY(10px); transition: opacity .8s ease, transform .8s ease; }
 .scene .ly.on { opacity: 1; transform: none; }
@@ -441,3 +444,721 @@ tr:last-child td { border-bottom: 0; }
 .stop-bar { position: fixed; z-index: 55; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 999px; border: 2.5px solid var(--outline); background: var(--gold); color: #1d1530; font: 800 1rem var(--sans); box-shadow: 0 4px 0 var(--outline), 0 10px 30px rgba(0,0,0,.35); cursor: pointer; }
 .stop-bar[hidden] { display: none; }
 .stop-bar__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); animation: tw 1s ease-in-out infinite; }
+
+/* ---------- versión simple: extras plegados, tarjetas y portadas ligeras ---------- */
+.extras section.folded { margin-bottom: 12px; }
+.extras section.folded + section:not(.folded) { margin-top: 48px; }
+.fold { border: 2px solid var(--line-strong); border-radius: var(--r-m); }
+.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 12px 18px; min-height: 56px; }
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary::after { content: "+"; margin-left: auto; font: 600 1.6rem/1 var(--sans); color: var(--gold); }
+.fold[open] > summary::after { content: "–"; }
+.fold > summary .section-title { margin: 0; font-size: clamp(1.2rem, 1.05rem + .8vw, 1.6rem); }
+.fold__in { padding: 4px 18px 20px; }
+.about__btns { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.boxes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.boxes .box { flex: 1 1 0; min-width: 0; margin: 0; }
+.boxes .box[open] { flex-basis: 100%; }
+
+.specs-fold { margin-top: 22px; text-align: left; }
+.specs-fold > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 2px solid var(--line-strong); font: 800 .74rem var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.specs-fold > summary::-webkit-details-marker { display: none; }
+.specs-fold > summary::after { content: "+"; font-size: 1.1rem; }
+.specs-fold[open] > summary::after { content: "–"; }
+.specs-fold .specs { margin-top: 10px; }
+.chapter[data-body="marte"] .specs-fold > summary { color: var(--mars-soft); }
+.ch-cover:not(.has-media) .specs-fold { max-width: 560px; margin-left: auto; margin-right: auto; }
+
+@media (max-width: 899px) {
+  .topbar #theme { display: none; }
+  .boxes .box summary { letter-spacing: .05em; padding: 8px 10px; gap: 6px; }
+  .ch-cover { min-height: auto; padding: 48px 16px 28px; }
+  .photo--2 { display: none; }
+}
+
+/* ---------- cenefa de flores de retablo ---------- */
+.retablo-band { display: block; width: 100%; max-width: 520px; height: auto; margin: 0 0 20px; filter: drop-shadow(0 4px 0 var(--outline)); }
+.ch-cover:not(.has-media) .retablo-band { margin-left: auto; margin-right: auto; }
+.retablo-crest { padding: 8px 16px 0; }
+.retablo-crest .retablo-band { max-width: 760px; margin: 0 auto; }
+
+/* =========================================================================
+   RETABLO AYACUCHANO: paleta, marcos, pisos y páginas
+   Azul de caja, rojo de marco, crema de puerta pintada, flores encima.
+   ========================================================================= */
+:root { --rblue: #1F4FBF; --rgreen: #1F8A4C; --paper: #FFFBF0; }
+body::before {
+  background:
+    radial-gradient(60% 45% at 85% 8%, rgba(31, 79, 191, .5), transparent 70%),
+    radial-gradient(50% 40% at 8% 60%, rgba(194, 24, 91, .2), transparent 70%),
+    radial-gradient(40% 35% at 70% 95%, rgba(31, 79, 191, .35), transparent 70%);
+}
+.topbar { border-bottom: 3px solid var(--red); }
+
+/* tablas pintadas: en modo noche los paneles son crema, como las puertas del retablo */
+:root:not([data-theme="day"]) :is(.card, .obj, .about > div, .cast__item, .specs, .photo, .timeline li, .table-wrap, .lang-menu, .piso) {
+  --surface: var(--paper); --panel: #F3E7CC; --text: #1d1530; --muted: #55506b;
+  --peri: #1F4FBF; --milky: #1f2c5c; --mars-soft: #B3432A;
+  --line: rgba(29, 21, 48, .13); --line-strong: rgba(29, 21, 48, .34);
+  color: var(--text);
+}
+:root:not([data-theme="day"]) :is(.obj .tag, .tl__y, .cast__item b, .box--bridge summary, .piso .no) { color: #A8480A; }
+:root[data-theme="day"] .piso .no { color: #A8480A; }
+
+/* tarjetas del cuento: letra clara de leer y marco rojo */
+.card { border: 3px solid var(--red); }
+.step.is-active .card { border-color: var(--red); box-shadow: 0 5px 0 var(--outline), 0 0 0 3px var(--gold); }
+.verse { font: 600 clamp(1.2rem, 1.1rem + .5vw, 1.42rem)/1.6 var(--sans); }
+.verse.is-moon { font-style: normal; color: var(--milky); }
+.card .play { min-height: 52px; padding: 0 22px; font-size: 1.05rem; background: var(--gold); color: #1d1530; border-color: #1d1530; box-shadow: 0 4px 0 #1d1530; }
+.card .play[aria-pressed="true"] { background: var(--red); color: #fff; }
+
+/* marcos de las ilustraciones */
+.scene { border: 5px solid var(--red); box-shadow: 0 0 0 2px var(--paper), 0 7px 0 2px var(--outline), 0 20px 50px rgba(0,0,0,.35); }
+
+/* portada: el retablo abierto */
+.retablo { max-width: 1000px; margin: 0 auto 28px; }
+.retablo__crest { width: 72%; margin: 0 auto -7px; position: relative; z-index: 1; }
+.retablo__crest svg { display: block; width: 100%; height: auto; }
+.retablo__body { display: grid; grid-template-columns: 1fr; }
+.retablo__box { border: 7px solid var(--red); border-radius: 6px; overflow: hidden; background: #070f26; box-shadow: 0 0 0 2px var(--paper), 0 8px 0 2px var(--outline), 0 24px 60px rgba(0,0,0,.4); }
+.retablo__box .hero__art { margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+.retablo__door { display: none; }
+@media (min-width: 900px) {
+  .retablo__crest { width: 50%; }
+  .retablo__body { grid-template-columns: 14fr 72fr 14fr; perspective: 1500px; }
+  .retablo__door { display: block; filter: drop-shadow(0 8px 0 var(--outline)); }
+  .retablo__door svg { display: block; width: 100%; height: 100%; }
+  .retablo__door--l { transform-origin: right center; transform: rotateY(26deg); }
+  .retablo__door--r { transform-origin: left center; transform: rotateY(-26deg); }
+}
+
+/* índice: un piso del retablo por capítulo */
+.pisos { max-width: 720px; margin: 0 auto; padding: 8px 16px 48px; text-align: center; }
+.pisos .section-lede { margin-left: auto; margin-right: auto; }
+.pisos__frame { max-width: 560px; margin: 0 auto; border: 7px solid var(--red); border-radius: 12px; overflow: hidden; background: var(--red); text-align: left; box-shadow: 0 0 0 2px var(--paper), 0 8px 0 2px var(--outline); }
+#crest .retablo-band { max-width: none; margin: 0; filter: none; }
+.pisos__box { list-style: none; margin: 0; padding: 0; }
+.pisos__box li { border-top: 6px solid var(--red); }
+.piso { display: flex; align-items: center; gap: 12px; padding: 10px 14px; min-height: 78px; text-decoration: none; background: var(--surface); color: var(--text); }
+.piso:hover, .piso:focus-visible { background: var(--panel); }
+.retablo-bud { width: 48px; height: 48px; flex: none; }
+.piso__txt { flex: 1; min-width: 0; }
+.piso .no { display: block; font: 800 .72rem var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+.piso .tt { display: block; font: 600 1.18rem/1.2 var(--serif); }
+.piso .ts { display: block; font-size: .88rem; line-height: 1.35; color: var(--muted); margin-top: 2px; }
+.piso__go { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: #1d1530; border: 2.5px solid #1d1530; box-shadow: 0 3px 0 #1d1530; font-size: .9rem; }
+
+/* pasar página: botones grandes abajo */
+.pager { position: fixed; z-index: 54; left: 0; right: 0; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); display: flex; justify-content: space-between; padding: 0 14px; pointer-events: none; }
+.pager[hidden] { display: none; }
+.pager__btn { pointer-events: auto; width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; border: 3px solid #1d1530; background: var(--gold); color: #1d1530; font-size: 1.5rem; line-height: 1; cursor: pointer; box-shadow: 0 4px 0 #1d1530, 0 10px 24px rgba(0,0,0,.35); }
+.pager__btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #1d1530; }
+.stop-bar { right: auto; left: 50%; transform: translateX(-50%); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); white-space: nowrap; }
+.toast { bottom: 96px; }
+
+@media (max-width: 899px) {
+  .piso .ts { display: none; }
+  .steps { padding-bottom: 40vh; }
+}
+
+/* logo de día: aclara su fondo beige para que se funda con la página */
+:root[data-theme="day"] .logo-day { filter: brightness(1.3) contrast(1.35); }
+
+/* ---------- escenas con ilustración (imagen por paso) ---------- */
+.scene--art { background: #0b1838; }
+.scene .ly.art { transform: none; transition: opacity 1s ease; }
+.scene--art .cam { transition: transform 6s ease-out; }
+
+/* =========================================================================
+   LA PÁGINA ENTERA ES EL RETABLO
+   Marco rojo fijo alrededor de la pantalla; las ilustraciones van de fondo.
+   ========================================================================= */
+:root { --frame: 9px; }
+@media (max-width: 899px) { :root { --frame: 7px; } }
+body { padding: var(--frame); }
+.page-frame { position: fixed; inset: 0; z-index: 80; pointer-events: none; border: var(--frame) solid var(--red); box-shadow: inset 0 0 0 2px var(--paper), inset 0 0 0 4px var(--rblue), inset 0 0 0 5px rgba(5, 10, 28, .55); }
+.topbar { top: var(--frame); }
+.notice { top: calc(var(--header-h) + var(--frame)); }
+
+/* capítulos con ilustración: la imagen llena la pantalla y el texto pasa por encima */
+.has-art .scrolly { display: block; max-width: none; padding: 0; }
+.has-art .scene-wrap { position: sticky; top: 0; height: 100svh; margin: 0; padding: 0; display: block; background: #0b1838; }
+.has-art .scene-wrap::after { display: none; }
+.has-art .scene { width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+.has-art .steps { position: relative; z-index: 3; padding: 0 16px 20vh; }
+.has-art .step { min-height: 100svh; align-items: flex-end; justify-content: center; padding: 0 0 104px; }
+.has-art .card { box-shadow: 0 5px 0 var(--outline), 0 16px 44px rgba(0, 0, 0, .5); }
+.has-art .step:not(.is-active) .card { opacity: .8; }
+@media (min-width: 900px) {
+  .has-art .steps { padding: 0 5vw 20vh; }
+  .has-art .step { justify-content: flex-end; padding-bottom: 12vh; }
+}
+
+@media (max-width: 899px) {
+  /* en celular la tarjeta ocupa poco, para que se vea la ilustración */
+  .has-art .verse { font-size: 1.08rem; line-height: 1.5; margin-bottom: 8px; }
+  .has-art .card { padding: 12px 14px 10px; }
+  .has-art .card .voice { margin-bottom: 6px; font-size: .7rem; }
+  .has-art .card__foot { margin-top: 8px; }
+  .has-art .card .play { min-height: 46px; }
+}
+
+/* =========================================================================
+   LIBRO INMERSIVO: sin marco rojo, tapa que se abre y texto como subtítulo
+   ========================================================================= */
+:root { --frame: 0px; }
+.page-frame { display: none; }
+.topbar { border-bottom: 1px solid var(--line); }
+
+/* texto como subtítulo sobre la ilustración */
+.has-art .steps { padding: 0 0 20vh; }
+.has-art .step { padding: 0; justify-content: stretch; }
+:root .has-art .step .card {
+  --surface: transparent; --panel: rgba(255, 255, 255, .13); --text: #FFFBF0; --muted: #d5dcee;
+  --peri: #a9c0f0; --milky: #FFFBF0; --mars-soft: #FF9D6F; --line: rgba(255, 255, 255, .18); --line-strong: rgba(255, 255, 255, .4);
+  width: 100%; max-width: none; border: 0; border-radius: 0; box-shadow: none; color: var(--text);
+  background: linear-gradient(transparent, rgba(5, 8, 26, .78) 34%, rgba(5, 8, 26, .92));
+  padding: 90px max(18px, calc(50% - 380px)) calc(92px + env(safe-area-inset-bottom, 0px));
+  opacity: 1; transform: none;
+}
+:root .has-art .step:not(.is-active) .card { opacity: .55; }
+:root .has-art .step.is-active .card { border: 0; box-shadow: none; }
+:root .has-art .step .card .box--bridge summary { color: var(--gold); }
+.has-art .card .voice { background: rgba(255, 255, 255, .16); }
+.has-art .verse { font-size: clamp(1.1rem, 1rem + .5vw, 1.4rem); line-height: 1.5; text-shadow: 0 1px 8px rgba(0, 0, 0, .7); cursor: pointer; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.has-art .verse.is-open { display: block; -webkit-line-clamp: unset; line-clamp: unset; }
+.has-art .step-count { color: #d5dcee; }
+@media (min-width: 900px) { .has-art .steps { padding: 0 0 20vh; } .has-art .step { padding: 0; } }
+
+/* =========================================================================
+   LA WEB ES EL LIBRO (html.bk): una página a la vez, sin scroll de documento
+   ========================================================================= */
+html.bk, html.bk body { height: 100%; overflow: hidden; }
+html.bk .topbar { position: fixed; left: 0; right: 0; top: 0; }
+html.bk .notice { position: fixed; left: 0; right: 0; }
+html.bk .hero, html.bk main > .awayu, html.bk .site-foot, html.bk .skip, html.bk .scroll-hint { display: none; }
+html.bk .pisos, html.bk .ch-cover, html.bk .scrolly, html.bk .extras { display: none; }
+html.bk .pisos.is-on, html.bk .extras.is-on, html.bk .scrolly.is-on { display: block; }
+html.bk .ch-cover.is-on { display: grid; }
+html.bk .pisos.is-on, html.bk .extras.is-on, html.bk .ch-cover.is-on { position: fixed; inset: 0; margin: 0 auto; overflow-y: auto; padding-top: calc(var(--header-h) + 22px); padding-bottom: 110px; }
+
+/* página de escena: dibujo a pantalla completa y subtítulo al pie */
+html.bk .has-art .scene-wrap { position: fixed; inset: 0; top: 0; height: auto; }
+html.bk .scene-wrap--svg { padding-top: var(--header-h); background: #060b1d; }
+html.bk .has-art .steps { position: fixed; left: 0; right: 0; bottom: 0; z-index: 3; padding: 0; }
+html.bk .step { display: none; min-height: 0; }
+html.bk .step.is-active { display: flex; }
+.pager__btn:disabled { opacity: .3; cursor: default; }
+
+/* =========================================================================
+   EL RETABLO INMERSIVO
+   Entrada: un retablo cerrado sobre una pared iluminada por velas; al tocar
+   se abren sus dos puertas pintadas y la cámara entra a la caja.
+   Dentro: cada capítulo es un piso. Entre escenas la luz se funde; al cambiar
+   de piso las puertas se cierran y se vuelven a abrir.
+   ========================================================================= */
+
+/* ---------- entrada: el retablo cerrado ocupa toda la pantalla ---------- */
+html.book-closed { overflow: hidden; }
+.rt-open {
+  position: fixed; inset: 0; z-index: 90; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  padding: max(10px, env(safe-area-inset-top, 0px)) 10px max(10px, env(safe-area-inset-bottom, 0px));
+  background:
+    radial-gradient(48% 40% at 50% 40%, rgba(242, 182, 50, .16), transparent 70%),
+    radial-gradient(70% 60% at 50% 45%, #241838 0%, #120c22 55%, #05040c 100%);
+  transition: opacity .6s ease;
+  --open: 0;
+}
+/* luz de vela que tiembla sobre la pared */
+.rt-open::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(38% 30% at 50% 96%, rgba(255, 170, 80, .22), transparent 70%);
+  animation: candle 4.5s ease-in-out infinite;
+}
+.rt-stage {
+  position: relative; display: flex; flex-direction: column;
+  width: min(100%, 84svh); height: 100%;
+  transition: transform 1.25s cubic-bezier(.65, 0, .25, 1); will-change: transform;
+}
+.rt-crest { position: relative; z-index: 2; flex: none; width: 106%; margin: 0 -3% -8px; }
+.rt-crest svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 0 #05040c); }
+.rt-box {
+  position: relative; flex: 1 1 auto; min-height: 0; perspective: 1600px; touch-action: none;
+  border: 10px solid var(--red); border-radius: 4px; background: #070f26;
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 6px var(--rblue), 0 40px 90px rgba(0, 0, 0, .7);
+}
+.rt-scene { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.rt-box::after { content: ""; position: absolute; inset: 0; pointer-events: none; box-shadow: inset 0 0 50px rgba(0, 0, 0, .65); transition: opacity 1s; }
+
+/* puertas: giran según --open (0 cerrado · 1 abierto); con el dedo siguen el arrastre */
+.rt-door { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 1; transform-style: preserve-3d; transition: transform 1.35s cubic-bezier(.5, .02, .25, 1); cursor: grab; }
+.rt-door--l { left: 0; transform-origin: left center; transform: rotateY(calc(var(--open) * -112deg)); }
+.rt-door--r { right: 0; transform-origin: right center; transform: rotateY(calc(var(--open) * 112deg)); }
+.rt-open.is-drag .rt-door { transition: none; cursor: grabbing; }
+.rt-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.rt-face svg { display: block; width: 100%; height: 100%; }
+.rt-face--back { transform: rotateY(180deg); filter: brightness(.82); }
+/* toque sin arrastrar: las puertas tiemblan, están cerradas con el pestillo */
+.rt-open.is-shake .rt-door--l { animation: shakeL .5s ease; }
+.rt-open.is-shake .rt-door--r { animation: shakeR .5s ease; }
+.rt-open.is-shake .rt-latch::before { animation: latchCall .5s ease 2; }
+@keyframes shakeL { 25% { transform: rotateY(-7deg); } 50% { transform: rotateY(-1deg); } 75% { transform: rotateY(-4deg); } }
+@keyframes shakeR { 25% { transform: rotateY(7deg); } 50% { transform: rotateY(1deg); } 75% { transform: rotateY(4deg); } }
+
+/* el pestillo dorado del centro: se toca y gira */
+.rt-latch { position: absolute; z-index: 4; left: 50%; top: 50%; width: 76px; height: 96px; margin: -48px 0 0 -38px; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 22px; transition: opacity .35s .25s; }
+.rt-latch::before { content: ""; position: absolute; inset: 6px 14px; border-radius: 20px; box-shadow: 0 0 0 0 rgba(242, 182, 50, .75); animation: latchCall 2s ease-out infinite; }
+.rt-latch__bolt {
+  position: absolute; left: 50%; top: 50%; width: 22px; height: 80px; transform: translate(-50%, -50%);
+  border-radius: 7px; border: 2.5px solid #1d1530; box-shadow: 0 3px 0 #1d1530;
+  background: linear-gradient(90deg, #9c6a12, #F2B632 30%, #ffe8a0 50%, #F2B632 70%, #9c6a12);
+  transition: transform .4s cubic-bezier(.3, 1.6, .5, 1);
+}
+.rt-latch__bolt::after { content: ""; position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px; border-radius: 50%; border: 2.5px solid #1d1530; background: radial-gradient(circle at 40% 35%, #fff2c2, #F2B632 45%, #a8741a); box-shadow: 0 2px 0 #1d1530; }
+.rt-latch:hover .rt-latch__bolt, .rt-latch:focus-visible .rt-latch__bolt { transform: translate(-50%, -50%) rotate(-12deg); }
+.rt-open.is-unlocked .rt-latch__bolt { transform: translate(-50%, -50%) rotate(90deg); }
+.rt-open.is-unlocked .rt-latch::before { animation: none; }
+.rt-open.is-open .rt-latch { opacity: 0; pointer-events: none; }
+@keyframes latchCall { 0% { box-shadow: 0 0 0 0 rgba(242, 182, 50, .75); } 100% { box-shadow: 0 0 0 22px rgba(242, 182, 50, 0); } }
+
+.rt-hint {
+  position: absolute; z-index: 4; left: 50%; top: calc(50% + 58px); transform: translateX(-50%);
+  margin: 0; width: max-content; max-width: 84%; text-align: center; pointer-events: none;
+  padding: 8px 14px; border-radius: 14px; border: 2px solid var(--gold);
+  background: rgba(5, 8, 26, .85); color: #FFFBF0; font: 800 .88rem/1.3 var(--sans);
+  animation: hintBob 2.2s ease-in-out infinite; transition: opacity .3s;
+}
+.rt-hint::before { content: ""; position: absolute; left: 50%; top: -8px; margin-left: -7px; border: 7px solid transparent; border-top: 0; border-bottom: 8px solid var(--gold); }
+.rt-open.is-unlocked .rt-hint, .rt-open.is-drag .rt-hint { opacity: 0; }
+@keyframes hintBob { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 5px); } }
+
+/* las lenguas: banderines de fiesta colgados de una cuerda delante de las puertas */
+.rt-flags { position: absolute; z-index: 3; left: 4px; right: 4px; top: 4px; pointer-events: none; transition: opacity .5s, transform .8s cubic-bezier(.5, 0, .75, 0); }
+.rt-garland { position: relative; height: 92px; }
+.rt-garland + .rt-garland { margin-top: -8px; }
+.rt-cord { position: absolute; left: 0; top: 0; width: 100%; height: 20px; overflow: visible; }
+.rt-cord path { fill: none; stroke: #1d1530; stroke-width: 2.4; vector-effect: non-scaling-stroke; }
+.flag {
+  position: absolute; transform: translateX(-50%); width: min(calc(100% / var(--n) - 8px), 128px);
+  margin: -3px 0 0; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto;
+  filter: drop-shadow(0 3px 0 rgba(29, 21, 48, .9)); transition: transform .3s cubic-bezier(.3, 1.6, .5, 1), filter .3s;
+}
+.flag__cloth {
+  display: flex; align-items: center; justify-content: center; text-align: center; min-height: 66px;
+  padding: 9px 5px 20px; overflow-wrap: anywhere; hyphens: auto;
+  color: var(--ft); font: 800 .78rem/1.1 var(--sans);
+  background: radial-gradient(circle at 50% 74%, rgba(255, 253, 246, .9) 0 3px, transparent 3.6px), var(--fc);
+  border-top: 6px solid rgba(29, 21, 48, .35);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  transform-origin: 50% 0; animation: sway 3.4s ease-in-out infinite; animation-delay: var(--d);
+}
+.flag:hover { transform: translateX(-50%) translateY(3px); }
+.flag[aria-pressed="true"] {
+  transform: translateX(-50%) scale(1.12); z-index: 1;
+  filter: drop-shadow(2.5px 0 0 #F2B632) drop-shadow(-2.5px 0 0 #F2B632) drop-shadow(0 2.5px 0 #F2B632) drop-shadow(0 -1px 0 #F2B632) drop-shadow(0 4px 6px rgba(0, 0, 0, .55));
+}
+.flag.is-next .flag__cloth { opacity: .8; }
+@keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.rt-open.is-open .rt-flags { opacity: 0; transform: translateY(-40px); }
+
+/* la cartela pintada al pie: el título del cuento */
+.rt-base {
+  position: relative; z-index: 2; flex: none; margin: 6px -2% 0; padding: 16px 14px 14px; text-align: center;
+  background: var(--paper); border: 5px solid var(--red); border-radius: 0 0 12px 12px;
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 5px var(--rblue), 0 10px 0 5px #05040c, 0 24px 50px rgba(0, 0, 0, .6);
+}
+.rt-base::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 7px; background: repeating-linear-gradient(90deg, var(--red) 0 22px, var(--gold) 22px 30px, var(--teal) 30px 46px, var(--magenta) 46px 60px, var(--plum) 60px 70px); }
+.book__brand { display: block; font: 700 .9rem/1 var(--serif); letter-spacing: .34em; color: #A8480A; margin-bottom: 4px; }
+.book__title { font: 500 italic clamp(1.6rem, 1.1rem + 2.6vw, 2.8rem)/1.05 var(--serif); margin: 0; color: #1d1530; }
+
+/* 1) abiertas · 2) la cámara entra (transform en app.js) · 3) se funde con la escena */
+.rt-open.is-open .rt-box::after { opacity: .35; }
+.rt-open.is-zoom { background: #05040c; }
+.rt-open.is-zoom::before { opacity: 0; }
+.rt-open.is-gone { opacity: 0; pointer-events: none; }
+
+@media (max-width: 899px) { .rt-box { border-width: 7px; } }
+@media (max-height: 600px) {
+  .rt-garland { height: 64px; }
+  .flag__cloth { min-height: 44px; font-size: .64rem; padding: 6px 3px 13px; }
+  .rt-base { padding: 10px 10px 8px; }
+  .book__title { font-size: 1.4rem; }
+}
+@media (prefers-reduced-motion: reduce) { .flag__cloth, .rt-hint, .rt-latch::before { animation: none; } }
+
+/* ---------- puertas al cambiar de piso ---------- */
+.doors { position: fixed; left: 0; right: 0; bottom: 0; top: var(--header-h); z-index: 48; pointer-events: none; perspective: 2400px; visibility: hidden; }
+.doors.is-shown { visibility: visible; pointer-events: auto; }
+.doors > div { position: absolute; top: 0; bottom: 0; width: 50%; transition: transform .6s cubic-bezier(.55, 0, .8, .2); filter: drop-shadow(0 0 28px rgba(0, 0, 0, .55)); }
+.doors svg { display: block; width: 100%; height: 100%; }
+.doors__l { left: 0; transform-origin: left center; transform: rotateY(-96deg); }
+.doors__r { right: 0; transform-origin: right center; transform: rotateY(96deg); }
+.doors__r::before { content: ""; position: absolute; left: -8px; top: calc(50% - 26px); width: 16px; height: 52px; z-index: 1; border-radius: 4px; background: linear-gradient(90deg, #b9821a, var(--gold), #b9821a); border: 2px solid #1d1530; }
+.doors.is-closed > div { transform: none; }
+.doors.is-opening > div { transition: transform .8s cubic-bezier(.2, .7, .25, 1); }
+
+/* ---------- dentro del retablo ---------- */
+/* la portadilla, el índice y el final aparecen con la luz */
+html.bk .is-on { animation: rtIn .7s ease both; }
+html.bk .step.is-active .card { animation: subIn .7s .15s ease both; }
+
+/* marco pintado de la caja alrededor de la escena */
+html.bk .has-art .scene-wrap::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; top: var(--header-h); z-index: 1; pointer-events: none;
+  border: 7px solid var(--red);
+  box-shadow: inset 0 0 0 2px var(--paper), inset 0 0 0 5px var(--rblue), inset 0 0 40px rgba(5, 4, 12, .5);
+}
+/* luz de vela: viñeta cálida que respira */
+html.bk .has-art .scene-wrap::after {
+  display: block; content: ""; position: absolute; inset: 0; height: auto; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(120% 95% at 50% 42%, transparent 52%, rgba(8, 4, 20, .55) 100%),
+    radial-gradient(55% 35% at 50% 100%, rgba(255, 170, 80, .12), transparent 70%);
+  animation: candle 5s ease-in-out infinite;
+}
+/* profundidad: la escena se mueve un poco con el ratón / al inclinar el celular */
+html.bk .has-art .scene { transform: translate3d(calc(var(--px, 0) * -22px), calc(var(--py, 0) * -14px), 0) scale(1.05); transition: transform .8s ease-out; }
+/* florcitas en las esquinas de la caja */
+.rt-corners { display: none; }
+html.bk.on-scene .rt-corners { display: block; }
+.rt-corner { position: fixed; z-index: 4; width: 40px; height: 40px; pointer-events: none; filter: drop-shadow(0 2px 0 #1d1530); }
+.rt-corner svg { width: 100%; height: 100%; display: block; }
+.rt-corner--0 { left: -6px; top: calc(var(--header-h) - 6px); }
+.rt-corner--1 { right: -6px; top: calc(var(--header-h) - 6px); }
+.rt-corner--2 { left: -6px; bottom: -6px; }
+.rt-corner--3 { right: -6px; bottom: -6px; }
+@media (max-width: 899px) {
+  html.bk .has-art .scene-wrap::before { border-width: 5px; }
+  .rt-corner { width: 30px; height: 30px; }
+}
+
+@keyframes candle { 0%, 100% { opacity: 1; } 30% { opacity: .82; } 45% { opacity: .95; } 62% { opacity: .78; } 80% { opacity: .93; } }
+@keyframes rtIn { from { opacity: 0; } }
+@keyframes subIn { from { opacity: 0; transform: translateY(16px); } }
+@keyframes breathe { 0%, 100% { box-shadow: var(--shadow), 0 0 0 0 rgba(242, 182, 50, .5); } 50% { box-shadow: var(--shadow), 0 0 0 10px rgba(242, 182, 50, 0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html.bk .has-art .scene { transform: none; }
+  .doors { display: none; }
+}
+
+/* el aviso vacío no asoma por debajo */
+.toast:not(.show) { visibility: hidden; opacity: 0; transition: transform .35s, opacity .35s, visibility 0s .35s; }
+
+/* =========================================================================
+   MÁS INMERSIVO: barra que se esconde, avance solo, iconos y ficha,
+   e ilustraciones que se ven enteras en el celular
+   ========================================================================= */
+:root { --top-h: var(--header-h); }
+html.bk.chrome-hidden { --top-h: 0px; }
+
+/* barra de arriba: se esconde dentro de las escenas */
+html.bk .topbar { transition: transform .45s cubic-bezier(.4, 0, .2, 1); }
+html.bk.chrome-hidden .topbar { transform: translateY(-115%); }
+html.bk .has-art .scene-wrap::before { top: var(--top-h); transition: top .45s cubic-bezier(.4, 0, .2, 1); }
+.rt-corner--0, .rt-corner--1 { top: calc(var(--top-h) - 6px); transition: top .45s cubic-bezier(.4, 0, .2, 1); }
+.doors { top: var(--top-h); }
+.chrome-btn {
+  position: fixed; z-index: 56; top: calc(14px + env(safe-area-inset-top, 0px)); right: 14px;
+  width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  color: #FFFBF0; background: rgba(5, 8, 26, .5); border: 2px solid rgba(255, 255, 255, .45);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  opacity: 0; transform: translateY(-8px) scale(.9); pointer-events: none; transition: opacity .35s, transform .35s;
+}
+.chrome-btn svg { width: 22px; height: 22px; }
+html.bk.chrome-hidden .chrome-btn { opacity: 1; transform: none; pointer-events: auto; }
+
+/* progreso de las escenas del piso, como en las historias del celular */
+.segs { position: fixed; z-index: 5; left: 54px; right: 70px; top: calc(var(--top-h) + 20px + env(safe-area-inset-top, 0px)); display: flex; gap: 5px; pointer-events: none; transition: top .45s cubic-bezier(.4, 0, .2, 1); }
+html:not(.chrome-hidden) .segs { top: calc(var(--top-h) + 16px); right: 54px; }
+.segs i { flex: 1; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .3); overflow: hidden; box-shadow: 0 1px 4px rgba(0, 0, 0, .35); }
+.segs b { display: block; height: 100%; background: var(--gold); transform-origin: left; transform: scaleX(0); }
+.segs i.is-done b { transform: scaleX(1); }
+html:not(.on-scene) .segs { display: none; }
+
+/* botón central: pausa / reproducir el retablo */
+html.bk .stop-bar { min-height: 52px; padding: 0 22px; }
+html.bk .stop-bar.is-paused { background: #FFFBF0; }
+.stop-bar:not(.is-speaking) .stop-bar__dot { display: none; }
+#stopBarIco { font-size: .95em; letter-spacing: -.1em; }
+
+/* iconos del dato NASA (cohete) y del puente andino (chakana) */
+.card__foot { flex-wrap: nowrap; }
+.ico-row { display: flex; gap: 10px; margin-right: auto; margin-left: 14px; }
+.ico {
+  width: 46px; height: 46px; flex: none; border-radius: 50%; display: grid; place-items: center; cursor: pointer; padding: 0;
+  border: 2.5px solid #1d1530; box-shadow: 0 3px 0 #1d1530; position: relative;
+  animation: icoIn .5s .35s cubic-bezier(.3, 1.6, .5, 1) both;
+}
+.ico svg { width: 24px; height: 24px; }
+.ico--fact { background: var(--rblue); color: #FFFBF0; }
+.ico--bridge { background: var(--gold); color: var(--red); animation-delay: .45s; }
+.ico--bridge svg { width: 26px; height: 26px; }
+.ico::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid currentColor; opacity: 0; animation: icoRing 2.4s 1s ease-out 2; }
+.ico--bridge::after { border-color: var(--gold); }
+.ico.is-sel { transform: translateY(3px); box-shadow: 0 0 0 #1d1530, 0 0 0 3px #FFFBF0; }
+@keyframes icoIn { from { opacity: 0; transform: scale(.4) rotate(-30deg); } }
+@keyframes icoRing { 0% { opacity: .9; transform: scale(.9); } 100% { opacity: 0; transform: scale(1.35); } }
+
+/* ficha que sube desde abajo, pintada como una tabla del retablo */
+.sheet {
+  position: fixed; z-index: 57; left: 12px; right: 12px; bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  max-width: 560px; margin: 0 auto; max-height: 52svh; overflow-y: auto;
+  background: var(--paper); color: #1d1530; border: 4px solid var(--red); border-radius: 16px;
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 5px var(--rblue), 0 8px 0 5px #05040c, 0 24px 60px rgba(0, 0, 0, .55);
+  padding: 14px 16px 16px; opacity: 0; transform: translateY(30px) scale(.97); transition: opacity .3s, transform .35s cubic-bezier(.3, 1.3, .5, 1);
+}
+.sheet.is-open { opacity: 1; transform: none; }
+.sheet[hidden] { display: none; }
+.sheet__head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.sheet__ico { width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center; border: 2.5px solid #1d1530; }
+.sheet__ico svg { width: 22px; height: 22px; }
+.sheet--fact .sheet__ico { background: var(--rblue); color: #FFFBF0; }
+.sheet--bridge .sheet__ico { background: var(--gold); color: var(--red); }
+.sheet h3 { flex: 1; margin: 0; font: 800 .8rem var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--rblue); }
+.sheet--bridge h3 { color: #A8480A; }
+.sheet__x { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 2px solid rgba(29, 21, 48, .3); background: transparent; color: #1d1530; font-size: 1rem; cursor: pointer; }
+.sheet__body p { margin: 0 0 8px; font-size: 1.02rem; line-height: 1.55; }
+.sheet__body .src { color: var(--rblue); }
+.sheet--bridge { border-image: linear-gradient(90deg, var(--red) 0 25%, var(--gold) 25% 50%, var(--teal) 50% 75%, var(--magenta) 75%) 1; border-radius: 0; }
+
+/* ilustraciones en celular vertical: se ve casi todo el dibujo, y detrás la misma
+   escena difuminada llena la pantalla (luz de retablo, sin bandas vacías) */
+.scene-bg { display: none; }
+@media (max-width: 899px) and (orientation: portrait) {
+  html.bk .scene-bg {
+    display: block; position: absolute; inset: -60px; background: #0b1838 center / cover no-repeat;
+    filter: blur(26px) brightness(.55) saturate(1.25); transform: scale(1.1); transition: background-image .9s ease;
+  }
+  html.bk .has-art .scene.scene--art {
+    position: absolute; left: 0; right: 0; top: calc(var(--top-h) + 34px);
+    height: clamp(230px, 92vw, calc(100svh - 400px)); width: 100%;
+    -webkit-mask-image: linear-gradient(transparent, #000 7%, #000 84%, transparent);
+    mask-image: linear-gradient(transparent, #000 7%, #000 84%, transparent);
+    transition: top .45s cubic-bezier(.4, 0, .2, 1), transform .8s ease-out;
+  }
+  html.bk .has-art .step .card { padding-top: 56px; }
+  .ico { width: 44px; height: 44px; }
+  .ico-row { margin-left: 10px; gap: 8px; }
+  .card .play { padding: 0 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ico, .ico::after { animation: none; }
+}
+
+/* =========================================================================
+   CONTROLES PINTADOS COMO EL RETABLO
+   Cada botón es un medallón: centro de color, corona de rayos (como el
+   Inti de las puertas) y filete negro. La barra de pausa es una tablita pintada.
+   ========================================================================= */
+.pager__btn, .chrome-btn, .ico, .sheet__ico { border: 2.5px solid #1d1530; }
+.pager__btn {
+  width: 66px; height: 66px; color: #1d1530; font-size: 1.35rem;
+  background: radial-gradient(circle, #ffe08a 0 24%, var(--gold) 25% 52%, #1d1530 53% 56%, transparent 57%),
+              repeating-conic-gradient(var(--red) 0 15deg, #F28C28 15deg 30deg);
+  box-shadow: 0 4px 0 #1d1530, 0 10px 24px rgba(0, 0, 0, .4);
+}
+.pager__btn:active { box-shadow: 0 1px 0 #1d1530, 0 6px 14px rgba(0, 0, 0, .4); }
+.chrome-btn {
+  background: radial-gradient(circle, #1f2c5c 0 54%, #1d1530 55% 59%, transparent 60%),
+              repeating-conic-gradient(var(--gold) 0 18deg, var(--red) 18deg 36deg);
+  backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 3px 0 #1d1530;
+}
+.ico { width: 50px; height: 50px; box-shadow: 0 3px 0 #1d1530; }
+.ico--fact, .sheet--fact .sheet__ico {
+  color: #FFFBF0;
+  background: radial-gradient(circle, var(--rblue) 0 58%, #1d1530 59% 63%, transparent 64%),
+              repeating-conic-gradient(#FFFBF0 0 18deg, var(--gold) 18deg 36deg);
+}
+.ico--bridge, .sheet--bridge .sheet__ico {
+  color: var(--red);
+  background: radial-gradient(circle, #FFFBF0 0 58%, #1d1530 59% 63%, transparent 64%),
+              repeating-conic-gradient(var(--red) 0 18deg, var(--gold) 18deg 36deg);
+}
+.ico svg { width: 22px; height: 22px; }
+.ico--bridge svg { width: 24px; height: 24px; }
+.sheet__ico { width: 44px; height: 44px; }
+.ico::after { inset: -5px; }
+
+/* pausa / reproducir: tablita pintada */
+html.bk .stop-bar {
+  background: var(--gold); color: #1d1530; border: 3px solid var(--red);
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 4.5px var(--rblue), 0 5px 0 4.5px #1d1530, 0 10px 26px rgba(0, 0, 0, .4);
+}
+html.bk .stop-bar.is-paused { background: var(--paper); }
+
+/* «Escuchar» de la escena */
+.card .play { border: 3px solid var(--red); box-shadow: 0 0 0 2px var(--paper), 0 4px 0 2px #1d1530; }
+
+/* barras de progreso: hilos de awayu */
+.segs b { background: repeating-linear-gradient(90deg, var(--gold) 0 10px, var(--red) 10px 14px); }
+
+
+/* =========================================================================
+   BANDERINES: cada lengua lleva la bandera o el emblema de quienes la hablan,
+   con una cinta con su nombre. La cuerda está clavada al marco.
+   ========================================================================= */
+.rt-garland::before, .rt-garland::after { content: ""; position: absolute; top: -3px; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff2c2, #F2B632 50%, #a8741a); border: 2px solid #1d1530; z-index: 1; }
+.rt-garland::before { left: -6px; }
+.rt-garland::after { right: -6px; }
+.rt-flags { left: -4px; right: -4px; top: 2px; }
+.rt-flags[data-rows="1"] .rt-garland { height: 96px; }
+
+.flag__cloth { position: relative; flex-direction: column; justify-content: flex-end; min-height: 72px; padding: 8px 4px 19px; border-top: 0; box-shadow: none; overflow-wrap: normal; word-break: normal; hyphens: manual; }
+.flag__cloth::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 5px; background: rgba(29, 21, 48, .45); }
+.flag__name {
+  display: block; max-width: 100%; padding: 2px 5px; border-radius: 4px;
+  background: #FFFBF0; color: #1d1530; font: 800 .66rem/1.15 var(--sans);
+  box-shadow: 0 0 0 1.5px #1d1530; overflow-wrap: normal; word-break: normal;
+}
+.flag[aria-pressed="true"] .flag__name { background: #F2B632; }
+.rt-flags[data-rows="1"] .flag__name { font-size: .62rem; padding: 2px 3px; }
+@media (max-height: 600px) { .flag__cloth { min-height: 48px; padding: 5px 3px 13px; } .flag__name { font-size: .56rem; } }
+
+/* =========================================================================
+   SUBTÍTULOS: letra de cuento y un degradado suave que no apaga la imagen
+   ========================================================================= */
+:root .has-art .step .card {
+  background: linear-gradient(transparent, rgba(5, 8, 26, .38) 40%, rgba(5, 8, 26, .66));
+  padding-top: 70px;
+}
+.has-art .verse {
+  font: 500 clamp(1.1rem, 1rem + .55vw, 1.5rem)/1.45 var(--serif); letter-spacing: .005em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .95), 0 2px 16px rgba(0, 0, 0, .6);
+}
+.has-art .verse.is-moon { font-style: italic; color: #FFFBF0; }
+/* luz de vela más tenue en los bordes */
+html.bk .has-art .scene-wrap::after {
+  background:
+    radial-gradient(130% 100% at 50% 42%, transparent 62%, rgba(8, 4, 20, .32) 100%),
+    radial-gradient(55% 35% at 50% 100%, rgba(255, 170, 80, .1), transparent 70%);
+}
+
+/* =========================================================================
+   AVISO PARA GIRAR EL CELULAR
+   ========================================================================= */
+.rotate { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 20px; background: rgba(5, 4, 12, .72); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); opacity: 0; transition: opacity .3s; }
+.rotate[hidden] { display: none; }
+.rotate.is-on { opacity: 1; }
+.rotate__card {
+  width: min(100%, 340px); text-align: center; padding: 22px 20px 18px; border-radius: 14px;
+  background: var(--paper); color: #1d1530; border: 5px solid var(--red);
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 5px var(--rblue), 0 10px 0 5px #05040c, 0 30px 60px rgba(0, 0, 0, .6);
+  transform: translateY(16px) scale(.96); transition: transform .35s cubic-bezier(.3, 1.4, .5, 1);
+}
+.rotate.is-on .rotate__card { transform: none; }
+.rotate__anim { position: relative; width: 110px; height: 110px; margin: 0 auto 8px; }
+.rotate__arrow { position: absolute; inset: 0; width: 100%; height: 100%; }
+.rotate__phone { position: absolute; left: 50%; top: 50%; width: 44px; height: 74px; margin: -37px 0 0 -22px; animation: turnPhone 2.6s cubic-bezier(.6, 0, .3, 1) infinite; }
+@keyframes turnPhone { 0%, 20% { transform: rotate(0); } 50%, 80% { transform: rotate(-90deg); } 100% { transform: rotate(0); } }
+.rotate h3 { margin: 0 0 6px; font: 600 1.5rem/1.15 var(--serif); }
+.rotate p { margin: 0 0 16px; color: #55506b; font-size: 1rem; line-height: 1.45; }
+.rotate__btns { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.rotate .btn--ghost { color: #1d1530; border-color: rgba(29, 21, 48, .35); }
+@media (prefers-reduced-motion: reduce) { .rotate__phone { animation: none; transform: rotate(-90deg); } }
+
+/* =========================================================================
+   CELULAR EN HORIZONTAL: la ilustración ocupa toda la pantalla
+   Flechas a los lados, pausa arriba, subtítulo en una franja baja.
+   ========================================================================= */
+@media (orientation: landscape) and (max-height: 520px) {
+  html.bk .pager { top: 50%; bottom: auto; transform: translateY(-50%); padding: 0 max(10px, env(safe-area-inset-left, 0px)); }
+  html.bk .pager__btn { width: 50px; height: 50px; font-size: 1.05rem; }
+  html.bk .stop-bar { left: auto; right: 66px; top: calc(10px + env(safe-area-inset-top, 0px)); bottom: auto; transform: none; min-height: 42px; padding: 0 14px; font-size: .9rem; }
+  html.bk.on-scene .segs { left: max(20px, env(safe-area-inset-left, 0px)); right: 200px; top: 18px; }
+  :root .has-art .step .card {
+    padding: 44px max(78px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(transparent, rgba(5, 8, 26, .34) 42%, rgba(5, 8, 26, .62));
+  }
+  .has-art .verse { font-size: 1.04rem; line-height: 1.38; -webkit-line-clamp: 2; line-clamp: 2; margin-bottom: 4px; }
+  .has-art .card .voice { font-size: .62rem; padding: 4px 10px; margin-bottom: 4px; }
+  .has-art .card__foot { margin-top: 2px; }
+  .ico { width: 40px; height: 40px; }
+  .ico svg { width: 18px; height: 18px; }
+  .card .play { min-height: 40px; padding: 0 14px; font-size: .95rem; }
+  .sheet { bottom: 10px; max-height: 72svh; max-width: 520px; }
+  html.bk .has-art .scene-wrap::before { border-width: 4px; }
+  .rt-corner { width: 24px; height: 24px; }
+  /* portadillas, índice y final: menos margen arriba y abajo */
+  html.bk .pisos.is-on, html.bk .extras.is-on, html.bk .ch-cover.is-on { padding-bottom: 20px; padding-left: 76px; padding-right: 76px; }
+
+  /* el retablo cerrado en horizontal: más ancho y con la cresta más baja */
+  .rt-stage { width: min(100%, 128svh); }
+  .rt-crest { display: flex; justify-content: center; }
+  .rt-crest svg { width: auto; max-width: 100%; height: 19svh; }
+  .rt-base { padding: 5px 10px 6px; }
+  .rt-base::before { height: 5px; }
+  .book__brand { font-size: .66rem; margin-bottom: 1px; }
+  .book__title { font-size: 1.2rem; }
+  .rt-hint { font-size: .74rem; padding: 5px 10px; top: calc(50% + 40px); }
+  .rt-latch { transform: scale(.8); }
+}
+
+/* =========================================================================
+   PORTADILLAS DE CAPÍTULO: todo entra en una pantalla, sin scroll
+   ========================================================================= */
+html.bk .ch-cover.is-on { align-content: center; }
+html.bk .ch-cover .photo figcaption { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+/* celular vertical: la foto más baja para que quepa con el texto */
+@media (max-width: 899px) and (orientation: portrait) {
+  html.bk .ch-cover.is-on { gap: 16px; padding-top: calc(var(--header-h) + 14px); padding-bottom: 100px; }
+  html.bk .ch-cover .photo img { max-height: 24svh; }
+  html.bk .ch-title { font-size: clamp(1.9rem, 1.4rem + 3vw, 2.6rem); margin: 6px 0 8px; }
+  html.bk .ch-teaser { font-size: 1rem; margin-bottom: 12px; }
+  html.bk .ch-cover .specs-fold { margin-top: 12px; }
+}
+/* celular horizontal: texto a la izquierda, foto a la derecha */
+@media (orientation: landscape) and (max-height: 520px) {
+  html.bk .ch-cover.is-on {
+    padding-top: calc(var(--header-h) + 10px); padding-bottom: 12px;
+    gap: 24px; align-items: center;
+  }
+  html.bk .ch-cover.has-media { grid-template-columns: 1.1fr 1fr; text-align: left; }
+  html.bk .ch-cover .photo img { max-height: calc(100svh - var(--header-h) - 96px); }
+  html.bk .ch-cover .photo figcaption { padding: 6px 10px 8px; font-size: .78rem; }
+  html.bk .ch-no { font-size: .72rem; }
+  html.bk .ch-title { font-size: clamp(1.7rem, 1.2rem + 2.4vw, 2.4rem); margin: 4px 0 6px; }
+  html.bk .ch-teaser { font-size: .95rem; margin-bottom: 10px; }
+  html.bk .ch-cover .specs-fold { margin-top: 10px; }
+  html.bk .ch-cover .specs-fold > summary { min-height: 38px; }
+}
+
+/* =========================================================================
+   MÁS INFORMACIÓN: botones con medallón + nombre + "+" (se ve que se abren)
+   ========================================================================= */
+.ico-row { gap: 8px; flex-wrap: wrap; }
+.ico.ico--fact, .ico.ico--bridge {
+  width: auto; height: 44px; padding: 3px 12px 3px 3px; gap: 7px; display: inline-flex; align-items: center;
+  border-radius: 999px; border: 2px solid rgba(255, 255, 255, .5); color: #FFFBF0;
+  background: rgba(5, 8, 26, .55); box-shadow: 0 3px 0 rgba(29, 21, 48, .8);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  font: 800 .78rem/1 var(--sans); letter-spacing: .02em; white-space: nowrap;
+}
+.ico.ico--fact { border-color: #8fb0ff; }
+.ico.ico--bridge { border-color: var(--gold); }
+.ico__m { width: 34px; height: 34px; flex: none; border-radius: 50%; display: grid; place-items: center; border: 2px solid #1d1530; }
+.ico__m svg { width: 18px; height: 18px; }
+.ico--fact .ico__m { color: #FFFBF0; background: radial-gradient(circle, var(--rblue) 0 58%, #1d1530 59% 63%, transparent 64%), repeating-conic-gradient(#FFFBF0 0 18deg, var(--gold) 18deg 36deg); }
+.ico--bridge .ico__m { color: var(--red); background: radial-gradient(circle, #FFFBF0 0 58%, #1d1530 59% 63%, transparent 64%), repeating-conic-gradient(var(--red) 0 18deg, var(--gold) 18deg 36deg); }
+.ico__plus { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font: 900 .95rem/1 var(--sans); background: var(--gold); color: #1d1530; transition: transform .25s; }
+.ico.is-sel { transform: translateY(2px); box-shadow: 0 1px 0 rgba(29, 21, 48, .8), 0 0 0 3px var(--gold); }
+.ico.is-sel .ico__plus { transform: rotate(45deg); }
+.ico::after { border-radius: 999px; }
+.ico:hover { background: rgba(5, 8, 26, .72); }
+@media (max-width: 380px) { .ico.ico--fact, .ico.ico--bridge { font-size: .7rem; padding-right: 9px; } }
+
+/* un solo botón de sonido: ❚❚ Pausa / ▶ Escuchar.
+   Horizontal: abajo a la derecha, donde la mano lo encuentra (las flechas están a los lados) */
+@media (orientation: landscape) and (max-height: 520px) {
+  html.bk .stop-bar { top: auto; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); left: auto; transform: none; min-height: 46px; padding: 0 18px; font-size: 1rem; }
+  html.bk.on-scene .segs { right: 70px; }
+  .ico.ico--fact, .ico.ico--bridge { height: 40px; }
+  .ico__m { width: 30px; height: 30px; }
+}
+/* el "2 / 8" sobra: las barritas de arriba ya muestran en qué escena vamos */
+html.bk .has-art .step-count { display: none; }
+html.bk .ico-row { margin-left: 0; flex-wrap: nowrap; }
+@media (max-width: 420px) { .ico.ico--fact, .ico.ico--bridge { font-size: .72rem; gap: 5px; padding-right: 8px; } .ico__plus { width: 18px; height: 18px; } }

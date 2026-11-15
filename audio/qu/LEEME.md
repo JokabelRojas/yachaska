@@ -1,6 +1,8 @@
 # Audios en quechua chanka
 
-Grabados por un hablante adulto (MP3, 44,1 kHz, mono, menos de 30 s), con autorización de uso de voz firmada.
+**Estado actual:** estos 56 audios son voz sintética (Meta MMS-TTS `facebook/mms-tts-quy`, quechua de Ayacucho, licencia CC-BY-NC 4.0, uso no comercial). Son provisionales.
+
+**Meta:** reemplazarlos por grabaciones de un hablante adulto (MP3, mono, menos de 30 s), con autorización de uso de voz firmada, usando los mismos nombres de archivo.
 
 Nombre de cada archivo: `<capítulo>-<paso>.mp3`
 

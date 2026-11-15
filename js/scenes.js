@@ -270,19 +270,37 @@
     </g>`;
   }
 
+  /* Ingenuity: cuerpo dorado, dos rotores coaxiales, panel solar arriba, cuatro patas finas.
+     (x, y) = punto del suelo entre las patas; opt.s = escala */
   function heli(x, y, opt) {
     const o = opt || {};
+    const DARK = "#2b2b33";
+    const blade = (cy, rx, rot) => `<path transform="rotate(${rot} 0 ${cy})" d="M${-rx} ${cy}Q${-rx / 2} ${cy - 4.5} 0 ${cy - 1.6}Q${rx / 2} ${cy - 4.5} ${rx} ${cy}Q${rx / 2} ${cy + 3} 0 ${cy + 1.6}Q${-rx / 2} ${cy + 3} ${-rx} ${cy}Z" fill="${DARK}" stroke="${INK}" stroke-width="1.2" stroke-linejoin="round"/>`;
     const blades = o.flying
-      ? `<ellipse cx="${x}" cy="${y - 62}" rx="62" ry="7" fill="#3a3a40" opacity=".35" class="blur-spin"/><ellipse cx="${x}" cy="${y - 74}" rx="62" ry="7" fill="#3a3a40" opacity=".35" class="blur-spin rev"/>`
+      ? `<ellipse cx="0" cy="-64" rx="62" ry="6" fill="${DARK}" opacity=".32" class="blur-spin"/><ellipse cx="0" cy="-76" rx="56" ry="6" fill="${DARK}" opacity=".32" class="blur-spin rev"/>
+         <path d="M-74 -58q-8 -6 -6 -16M74 -58q8 -6 6 -16" stroke="${CREAM}" stroke-width="2" fill="none" stroke-linecap="round" opacity=".7" class="fade"/>`
       : o.broken
-        ? `<line x1="${x - 56}" y1="${y - 62}" x2="${x + 56}" y2="${y - 62}" stroke="#3a3a40" stroke-width="5" stroke-linecap="round"/><line x1="${x - 56}" y1="${y - 74}" x2="${x}" y2="${y - 74}" stroke="#3a3a40" stroke-width="5" stroke-linecap="round"/><line x1="${x}" y1="${y - 74}" x2="${x + 26}" y2="${y - 66}" stroke="#D7263D" stroke-width="5" stroke-linecap="round"/>`
-        : `<line x1="${x - 56}" y1="${y - 62}" x2="${x + 56}" y2="${y - 62}" stroke="#3a3a40" stroke-width="5" stroke-linecap="round"/><line x1="${x - 46}" y1="${y - 74}" x2="${x + 46}" y2="${y - 74}" stroke="#3a3a40" stroke-width="5" stroke-linecap="round"/>`;
-    return `<g>
-      <path d="M${x - 10} ${y - 18}L${x - 30} ${y}M${x + 10} ${y - 18}L${x + 30} ${y}M${x - 5} ${y - 18}L${x - 14} ${y + 2}M${x + 5} ${y - 18}L${x + 14} ${y + 2}" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
-      <rect x="${x - 15}" y="${y - 42}" width="30" height="26" rx="4" fill="#d9c9a3" stroke="${INK}" stroke-width="2.5"/>
-      <line x1="${x}" y1="${y - 42}" x2="${x}" y2="${y - 86}" stroke="${INK}" stroke-width="3"/>
+        ? `${blade(-64, 58, 0)}<path d="M-50 -76Q-25 -80.5 0 -77.6V-74.4Q-25 -73 -50 -76Z" fill="${DARK}" stroke="${INK}" stroke-width="1.2" stroke-linejoin="round"/>
+           <path d="M3 -76L27 -67" stroke="#D7263D" stroke-width="5" stroke-linecap="round"/><path d="M46 -3l16 -4l3 4z" fill="${DARK}" stroke="${INK}" stroke-width="1.2" stroke-linejoin="round"/>`
+        : `${blade(-64, 58, 0)}${blade(-76, 50, -3)}`;
+    const foot = (fx) => `<ellipse cx="${fx}" cy="0" rx="4" ry="2.2" fill="${INK}"/>`;
+    return `<g transform="translate(${x} ${y}) scale(${o.s || 1})">
+      ${o.flying ? "" : `<ellipse cx="0" cy="3" rx="44" ry="5" fill="#3b1f14" opacity=".28"/>`}
+      <path d="M-11 -20L-36 0M11 -20L36 0M-6 -19L-17 1M6 -19L17 1" stroke="${INK}" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      ${foot(-36)}${foot(36)}${foot(-17)}${foot(17)}
+      <rect x="-16" y="-46" width="32" height="28" rx="5" fill="#e3c98f" stroke="${INK}" stroke-width="2.5"/>
+      <path d="M-13.5 -44.5h27a3 3 0 0 1 3 3v4h-33v-4a3 3 0 0 1 3 -3z" fill="#f6e7bd"/>
+      <path d="M7 -37.5h7.7v14.5a3.5 3.5 0 0 1 -3.5 3.5h-4.2z" fill="#c4a25f" opacity=".75"/>
+      <path d="M-13 -24l5 -3l4 3" stroke="#b08f52" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <circle cx="-3" cy="-30" r="6" fill="${INK}"/><circle cx="-3" cy="-30" r="3.6" fill="#3a60a0"/><circle cx="-4.6" cy="-31.6" r="1.4" fill="#fff"/>
+      <line x1="0" y1="-46" x2="0" y2="-92" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>
+      <rect x="-4.5" y="-67" width="9" height="6" rx="2" fill="#8a8f99" stroke="${INK}" stroke-width="1.4"/>
+      <rect x="-4.5" y="-79" width="9" height="6" rx="2" fill="#8a8f99" stroke="${INK}" stroke-width="1.4"/>
       ${blades}
-      <rect x="${x - 17}" y="${y - 92}" width="34" height="7" rx="2" fill="#1f2c5c" stroke="${INK}" stroke-width="2"/>
+      <rect x="-19" y="-98" width="38" height="8" rx="2" fill="#1f2c5c" stroke="${INK}" stroke-width="2"/>
+      <path d="M-9.5 -97v6M0 -97v6M9.5 -97v6" stroke="#5a7ad0" stroke-width="1"/>
+      <path d="M-16 -96h9" stroke="#9db4f0" stroke-width="1.2" stroke-linecap="round"/>
+      <line x1="0" y1="-98" x2="0" y2="-107" stroke="${INK}" stroke-width="1.6"/><circle cx="0" cy="-108" r="2" fill="${GOLD}" stroke="${INK}" stroke-width="1"/>
     </g>`;
   }
 
@@ -699,6 +717,8 @@
       <path d="M0 330L140 310L180 280L330 286L360 312L520 304L560 276L800 290V600H0Z" fill="#99857A" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
       <path d="M180 288L330 292M560 280L800 294" stroke="#8E6A5A" stroke-width="5"/>
       <path d="M0 400Q400 370 800 400V600H0Z" fill="#C67B5C" stroke="${INK}" stroke-width="2.5"/>
+      <path d="M30 462q70 -12 140 0M470 548q80 -14 160 0M210 566q55 -9 110 0M640 420q50 -8 100 0" stroke="#a85f43" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>
+      <g stroke="${INK}" stroke-width="2" stroke-linejoin="round"><path d="M455 500l10 -14l16 2l8 12z" fill="#8a4f3a"/><path d="M120 520l7 -9l12 1l6 8z" fill="#9a5a42"/><path d="M700 560l12 -16l20 3l9 13z" fill="#8a4f3a"/><path d="M250 430l5 -7l9 1l4 6z" fill="#9a5a42"/></g>
       ${label(780, 40, L("MARTE · cráter Jezero", "MARS · Jezero crater"), { anchor: "end", size: 15, fill: "#3b1f14", weight: 800 })}
       ${ly(5, `<g transform="translate(200 535) scale(1 .45)" opacity=".75">
           <path d="M-70 0Q-20 -20 30 0Q-20 20 -70 0Z" stroke="#f4efe6" stroke-width="4" fill="none"/>
@@ -708,16 +728,16 @@
         ${path}${label(400, 120, L("72 vuelos · ≈ 17 km", "72 flights · ≈ 17 km"), { size: 17, bg: "#663926", fill: "#ffc27a" })}`)}
       ${ly(1, perseverance(600, 478, 1), 6)}
       ${ly(1, `<g transform="translate(600 452)"><rect x="-14" y="-14" width="28" height="14" rx="3" fill="#d9c9a3" stroke="${INK}" stroke-width="2"/></g>`, 2)}
-      ${ly(2, heli(330, 480), 4)}
+      ${ly(2, heli(330, 480, { s: 1.4 }), 4)}
       ${ly(3, `<path d="M70 440V120" stroke="${CREAM}" stroke-width="3"/>${marks}
         <path d="M150 370Q120 360 90 375Q120 368 140 376L150 380L160 376Q180 368 210 375Q180 360 150 370Z" fill="${INK}"/><circle cx="150" cy="370" r="3" fill="#f4efe6"/>
         ${label(270, 180, L("aire 100 veces más delgado", "air 100 times thinner"), { size: 15, italic: true, bg: "#663926", fill: CREAM })}`, 4)}
       ${ly(4, `<ellipse cx="330" cy="500" rx="40" ry="7" fill="#663926" opacity=".4"/>
-        <g class="hover">${heli(330, 300, { flying: true })}</g>
+        <g class="hover">${heli(330, 300, { flying: true, s: 1.4 })}</g>
         ${label(330, 336, "19 · 04 · 2021", { size: 15, bg: "#663926", fill: "#ffc27a" })}
         <g transform="translate(420 230)"><rect x="0" y="0" width="34" height="24" fill="#e8dcc0" stroke="${INK}" stroke-width="2"/><path d="M4 8h26M4 15h20" stroke="#a89878" stroke-width="2"/>
         ${label(17, 44, "Wright 1903", { size: 12, fill: "#f4efe6" })}</g>`, 6)}
-      ${ly(6, `${heli(330, 488, { broken: true })}${label(330, 530, L("vuelo 72 · 2024", "flight 72 · 2024"), { size: 14, bg: "#663926", fill: CREAM })}`)}
+      ${ly(6, `${heli(330, 488, { broken: true, s: 1.4 })}${label(330, 530, L("vuelo 72 · 2024", "flight 72 · 2024"), { size: 14, bg: "#663926", fill: CREAM })}`)}
       ${ly(7, `${quipu}${label(145, 194, L("datos guardados, como un quipu", "data kept, like a quipu"), { size: 14, italic: true, fill: "#f4efe6" })}
         <circle cx="330" cy="430" r="50" fill="none" stroke="#ffc27a" stroke-width="2" class="pulse"/>
         <g transform="translate(410 420)"><rect x="-4" y="-30" width="8" height="30" rx="4" fill="#f4efe6" stroke="${INK}" stroke-width="2"/><circle cx="0" cy="4" r="8" fill="#D7263D" stroke="${INK}" stroke-width="2"/></g>`)}`;
